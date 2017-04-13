@@ -107,5 +107,5 @@ Debug Connection
     docker-machine ssh datanode-1
 
     root@datanode-1:~# docker swarm join \
-        --token SWMTKN-1-0gb5x2vw3z7z6qscbsp2c6k5b683fp6fykbov9nfvptrbit27n-4klu9e0t2cxtmw6352n8gujyk \
+        --token [your token here] \
         $MANAGER_NODE_IP_ADDRESS:2377
