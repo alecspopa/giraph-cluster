@@ -1,3 +1,10 @@
+## Apache Giraph
+
+Based on:
+- [https://github.com/bigdatafoundation/docker-hadoop]
+- [https://github.com/riyadparvez/giraph-yarn-cluster]
+- [https://dwbi.org/etl/bigdata/183-setup-hadoop-cluster
+
 #### Building the image
 
 	docker build --tag alecspopa/giraph-cluster .
@@ -18,55 +25,52 @@ or just specific ones
 
 ## Test instalation
 
-Run Page Rank Benchmark
+Debug Connection
 
-	docker run -it \
+	docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=yarn:yarn \
+        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         --volume=$(pwd)/tmp_work_dir:/tmp \
         alecspopa/giraph-cluster \
         /bin/bash
 
-
-inside the container get the shortestPaths example
-
-		cd /tmp
-		wget http://ece.northwestern.edu/~aching/shortestPathsInputGraph.tar.gz
-		tar zxvf shortestPathsInputGraph.tar.gz
-
-
-		hadoop jar $GIRAPH_HOME/giraph-examples-1.1.0-hadoop2.jar org.apache.giraph.benchmark.PageRankBenchmark -e 1 -s 3 -v -V 50000 -w 1
-
 #### Put some data in HDFS
 
-    docker run -it \
+	copy Readme.md to tmp_work_dir
+
+    docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=yarn:yarn \
+        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
-        --volume=$(pwd)/sample:/tmp \
+        --volume=$(pwd)/tmp_work_dir:/tmp \
         alecspopa/giraph-cluster \
-        hadoop fs -put /tmp/tiny-graph.txt /tiny-graph.txt
+        hadoop fs -put /tmp/Readme.md /README.txt
 
 #### Start wordcount example
 
-	docker run --rm \
-        --link yarn:yarn \
-        --link=hdfs-namenode:hdfs-namenode \
+	docker run -it --rm \
+        --link=giraphcluster_namenode:giraphcluster-namenode \
+        --link=giraphcluster_yarn:giraphcluster-yarn \
+        --net=giraphcluster_default \
         alecspopa/giraph-cluster \
-        hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar wordcount  /README.txt /README.result
+        hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar wordcount /README.txt /README.result
 
 ### If `word-cound.result` already exists you need to remove it prior running the map reduce job.
 
-    docker run --rm --link=hdfs-namenode:hdfs-namenode \
-        --link=hdfs-datanode1:docker_datanode_1 \
+    docker run -it --rm \
+        --link=giraphcluster_namenode:giraphcluster-namenode \
+        --link=giraphcluster_yarn:giraphcluster-yarn \
+        --net=giraphcluster_default \
         alecspopa/giraph-cluster \
         hadoop fs -rm -R -f /word-cound.result
 
 ### Check the result
 
-	docker run --rm --link=hdfs-namenode:hdfs-namenode \
-        --link=hdfs-datanode1:hdfs-datanode1 \
+	docker run -it --rm \
+        --link=giraphcluster_namenode:giraphcluster-namenode \
+        --link=giraphcluster_yarn:giraphcluster-yarn \
+        --net=giraphcluster_default \
         alecspopa/giraph-cluster \
         hadoop fs -cat /word-cound.result/\*
 
