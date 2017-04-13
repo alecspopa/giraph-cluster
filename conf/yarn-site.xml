@@ -15,7 +15,7 @@
 <configuration>
 	<property>
 		<name>yarn.resourcemanager.hostname</name>
-		<value>giraphcluster-namenode</value>
+		<value>giraphcluster-yarn</value>
 	</property>
 	<property>
 		<name>yarn.resourcemanager.bind-host</name>

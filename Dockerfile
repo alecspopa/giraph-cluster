@@ -1,11 +1,6 @@
 FROM ubuntu:16.04
 MAINTAINER Alecs Popa <Alecs Popa>
 
-# Based on:
-#    https://github.com/bigdatafoundation/docker-hadoop
-#    https://github.com/riyadparvez/giraph-yarn-cluster
-#    https://dwbi.org/etl/bigdata/183-setup-hadoop-cluster
-
 RUN mkdir /root/install
 WORKDIR /root/install
 
@@ -40,6 +35,7 @@ RUN apt-get update && \
 
 # HADOOP
 ENV HADOOP_PREFIX /usr/local/hadoop
+ENV HADOOP_HOME /usr/local/hadoop
 ENV HADOOP_COMMON_HOME /usr/local/hadoop
 ENV HADOOP_HDFS_HOME /usr/local/hadoop
 ENV HADOOP_MAPRED_HOME /usr/local/hadoop
@@ -49,21 +45,21 @@ ENV HADOOP_MAPRED_IDENT_STRING root
 ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
 
 ENV HADOOP_VERSION	2.7.1
-ENV HADOOP_OPTS		-Djava.library.path=$HADOOP_COMMON_HOME/lib/native
-ENV PATH		    $PATH:$HADOOP_COMMON_HOME/bin:$HADOOP_COMMON_HOME/sbin
+ENV HADOOP_OPTS		-Djava.library.path=$HADOOP_HOME/lib/native
+ENV PATH		    $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y libzip4 libsnappy1v5 libssl-dev && \
     wget --quiet http://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
     tar -zxf hadoop-$HADOOP_VERSION.tar.gz && \
     rm hadoop-$HADOOP_VERSION.tar.gz && \
-    mv hadoop-$HADOOP_VERSION $HADOOP_COMMON_HOME && \
-    mkdir -p $HADOOP_COMMON_HOME/logs
+    mv hadoop-$HADOOP_VERSION $HADOOP_HOME && \
+    mkdir -p $HADOOP_HOME/logs
 
 # Overwrite default HADOOP configuration files with our config files
-COPY conf           $HADOOP_COMMON_HOME/etc/hadoop/
-RUN chown root:root $HADOOP_COMMON_HOME/etc/hadoop/* && \
-    chmod 700 $HADOOP_COMMON_HOME/etc/hadoop/*
+COPY conf           $HADOOP_HOME/etc/hadoop/
+RUN chown root:root $HADOOP_HOME/etc/hadoop/* && \
+    chmod 700 $HADOOP_HOME/etc/hadoop/*
 
 # Giraph
 ENV GIRAPH_VERSION	1.1.0
@@ -88,7 +84,7 @@ RUN apt-get remove -y software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working dir to Hadoop home
-WORKDIR $HADOOP_COMMON_HOME
+WORKDIR $HADOOP_HOME
 
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090
