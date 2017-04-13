@@ -1,9 +1,9 @@
 ## Apache Giraph
 
 Based on:
-- [https://github.com/bigdatafoundation/docker-hadoop]
-- [https://github.com/riyadparvez/giraph-yarn-cluster]
-- [https://dwbi.org/etl/bigdata/183-setup-hadoop-cluster
+* <https://github.com/bigdatafoundation/docker-hadoop>
+* <https://github.com/riyadparvez/giraph-yarn-cluster>
+* <https://dwbi.org/etl/bigdata/183-setup-hadoop-cluster>
 
 #### Building the image
 
@@ -76,7 +76,7 @@ Debug Connection
 
 ## Build Docker Swarm cluster on Digital Ocean
 
-    <https://www.digitalocean.com/community/tutorials/how-to-create-a-cluster-of-docker-containers-with-docker-swarm-and-digitalocean-on-ubuntu-16-04>
+<https://www.digitalocean.com/community/tutorials/how-to-create-a-cluster-of-docker-containers-with-docker-swarm-and-digitalocean-on-ubuntu-16-04>
 
     docker-machine create -d digitalocean \
         --digitalocean-access-token="$DIGITALOCEAN_ACCESS_TOKEN" \
