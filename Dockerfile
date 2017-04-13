@@ -83,7 +83,8 @@ RUN mkdir -p /hadoop_work/hdfs/namenode /hadoop_work/hdfs/secondarynamenode /had
 VOLUME /hadoop_work
 
 # Cleanup APT
-RUN apt-get remove -y software-properties-common wget && \
+RUN apt-get remove -y software-properties-common && \
+	apt autoremove && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working dir to Hadoop home

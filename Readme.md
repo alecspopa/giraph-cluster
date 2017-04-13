@@ -16,13 +16,29 @@ or just specific ones
     docker-compose up -d namenode datanode yarn && \
         docker-compose logs
 
-### Test instalation
+## Test instalation
 
-	docker exec -it giraphcluster_namenode /bin/bash
+Run Page Rank Benchmark
 
-## Run Example
+	docker run -it \
+        --link=giraphcluster_namenode:giraphcluster-namenode \
+        --link=yarn:yarn \
+        --net=giraphcluster_default \
+        --volume=$(pwd)/tmp_work_dir:/tmp \
+        alecspopa/giraph-cluster \
+        /bin/bash
 
-### Put some data in HDFS
+
+inside the container get the shortestPaths example
+
+		cd /tmp
+		wget http://ece.northwestern.edu/~aching/shortestPathsInputGraph.tar.gz
+		tar zxvf shortestPathsInputGraph.tar.gz
+
+
+		hadoop jar $GIRAPH_HOME/giraph-examples-1.1.0-hadoop2.jar org.apache.giraph.benchmark.PageRankBenchmark -e 1 -s 3 -v -V 50000 -w 1
+
+#### Put some data in HDFS
 
     docker run -it \
         --link=giraphcluster_namenode:giraphcluster-namenode \
@@ -32,7 +48,7 @@ or just specific ones
         alecspopa/giraph-cluster \
         hadoop fs -put /tmp/tiny-graph.txt /tiny-graph.txt
 
-### Start wordcount example
+#### Start wordcount example
 
 	docker run --rm \
         --link yarn:yarn \

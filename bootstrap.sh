@@ -16,12 +16,3 @@ elif [[ $1 = "--yarn" ]]; then
 	/usr/sbin/sshd -D
 fi
 
-if [[ $2 = "--init-dfs-dirs" ]]; then
-	# Create HDFS directories will be used by YARN Map Reduce Staging, YARN Log & Job History Server
-	hdfs dfs -mkdir /tmp && \
-	hdfs dfs -chmod -R 1777 /tmp && \
-	hdfs dfs -mkdir /user/app && \
-	hdfs dfs -chmod -R 1777 /user && \
-	hdfs dfs -mkdir -p /var/log/hadoop-yarn/apps && \
-	hdfs dfs -chmod -R 1777 /var/log/hadoop-yarn
-fi
