@@ -23,11 +23,11 @@
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-		<value>hdfs-mrjobhistory:10020</value>
+		<value>giraphcluster_mrjobhistory:10020</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>hdfs-mrjobhistory:19888</value>
+		<value>giraphcluster_mrjobhistory:19888</value>
 	</property>
 	<property>
 		<name>yarn.app.mapreduce.am.staging-dir</name>

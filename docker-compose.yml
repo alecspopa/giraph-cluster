@@ -7,7 +7,7 @@ services:
     image: alecspopa/giraph-cluster
     container_name: giraphcluster_namenode
     hostname: giraphcluster-namenode
-    command: ["/etc/bootstrap.sh", "-namenode"]
+    command: ["/etc/bootstrap.sh", "--namenode"]
     ports:
       - "50070:50070"
 
@@ -15,7 +15,7 @@ services:
     image: alecspopa/giraph-cluster
     container_name: giraphcluster_secondarynamenode
     hostname: giraphcluster-secondarynamenode
-    command: ["/etc/bootstrap.sh", "-secondarynamenode"]
+    command: ["/etc/bootstrap.sh", "--secondarynamenode"]
     ports:
       - "50090:50090"
     links:
@@ -23,7 +23,7 @@ services:
 
   datanode:
     image: alecspopa/giraph-cluster
-    command: ["/etc/bootstrap.sh", "-datanode"]
+    command: ["/etc/bootstrap.sh", "--datanode"]
     ports:
       # The host port is randomly assigned by Docker, to allow scaling to multiple DataNodes on the same host
       - "50075"
@@ -34,22 +34,10 @@ services:
     image: alecspopa/giraph-cluster
     container_name: giraphcluster_yarn
     hostname: giraphcluster-yarn
-    command: ["/etc/bootstrap.sh", "-yarn"]
+    command: ["/etc/bootstrap.sh", "--yarn"]
     ports:
       - "8088:8088"
       - "8042:8042"
-    links:
-      - namenode:giraphcluster-namenode
-      - datanode
-
-  mrjobhistory:
-    image: alecspopa/giraph-cluster
-    container_name: giraphcluster_mrjobhistory
-    hostname: giraphcluster-mrjobhistory
-    command: ["/etc/bootstrap.sh", "-mrjobhistory"]
-    ports:
-      - "10020:10020"
-      - "19888:19888"
     links:
       - namenode:giraphcluster-namenode
       - datanode

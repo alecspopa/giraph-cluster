@@ -11,16 +11,25 @@ WORKDIR /root/install
 
 # Global dependencies
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common wget openssh-client iputils-ping && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common wget openssh-server openssh-client iputils-ping && \
     add-apt-repository ppa:openjdk-r/ppa
 
-# Passwordless SSH
-RUN ssh-keygen -q -N "" -t rsa -f /root/.ssh/id_rsa
-RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
+# SSH and user equivalence
+RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_ed25519_key && \
+	ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
+    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
+    ssh-keygen -q -N "" -t ed25519 -f /etc/ssh/ssh_host_ed25519_key && \
+    sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
 
-ADD ssh_config /root/.ssh/config
-RUN chmod 600 /root/.ssh/config
-RUN chown root:root /root/.ssh/config
+RUN mkdir -p /root/.ssh
+COPY ssh/id_rsa /root/.ssh/id_rsa
+COPY ssh/id_rsa.pub /root/.ssh/id_rsa.pub
+COPY ssh/id_rsa.pub /root/.ssh/authorized_keys
+COPY ssh/ssh_config /root/.ssh/config
+RUN chmod 600 /root/.ssh/config && chown root:root /root/.ssh/config
+
+RUN mkdir -p /var/run/sshd && \
+	chmod 0755 /var/run/sshd
 
 # JAVA
 ENV JAVA_HOME		/usr/lib/jvm/java-7-openjdk-amd64
@@ -30,23 +39,31 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # HADOOP
+ENV HADOOP_PREFIX /usr/local/hadoop
+ENV HADOOP_COMMON_HOME /usr/local/hadoop
+ENV HADOOP_HDFS_HOME /usr/local/hadoop
+ENV HADOOP_MAPRED_HOME /usr/local/hadoop
+ENV HADOOP_YARN_HOME /usr/local/hadoop
+ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
+ENV HADOOP_MAPRED_IDENT_STRING root
+ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
+
 ENV HADOOP_VERSION	2.7.1
-ENV HADOOP_HOME		/usr/local/hadoop
-ENV HADOOP_OPTS		-Djava.library.path=$HADOOP_HOME/lib/native
-ENV PATH		    $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+ENV HADOOP_OPTS		-Djava.library.path=$HADOOP_COMMON_HOME/lib/native
+ENV PATH		    $PATH:$HADOOP_COMMON_HOME/bin:$HADOOP_COMMON_HOME/sbin
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y libzip4 libsnappy1v5 libssl-dev && \
     wget --quiet http://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
     tar -zxf hadoop-$HADOOP_VERSION.tar.gz && \
     rm hadoop-$HADOOP_VERSION.tar.gz && \
-    mv hadoop-$HADOOP_VERSION $HADOOP_HOME && \
-    mkdir -p $HADOOP_HOME/logs
+    mv hadoop-$HADOOP_VERSION $HADOOP_COMMON_HOME && \
+    mkdir -p $HADOOP_COMMON_HOME/logs
 
 # Overwrite default HADOOP configuration files with our config files
-COPY conf           $HADOOP_HOME/etc/hadoop/
-RUN chown root:root $HADOOP_HOME/etc/hadoop/* && \
-    chmod 700 $HADOOP_HOME/etc/hadoop/*
+COPY conf           $HADOOP_COMMON_HOME/etc/hadoop/
+RUN chown root:root $HADOOP_COMMON_HOME/etc/hadoop/* && \
+    chmod 700 $HADOOP_COMMON_HOME/etc/hadoop/*
 
 # Giraph
 ENV GIRAPH_VERSION	1.1.0
@@ -70,7 +87,7 @@ RUN apt-get remove -y software-properties-common wget && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working dir to Hadoop home
-WORKDIR $HADOOP_HOME
+WORKDIR $HADOOP_COMMON_HOME
 
 # Hdfs ports
 EXPOSE 50010 50020 50070 50075 50090

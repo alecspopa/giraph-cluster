@@ -13,7 +13,7 @@ or get it form the repository
 
 or just specific ones
 
-    docker-compose up -d namenode datanode && \
+    docker-compose up -d namenode datanode yarn && \
         docker-compose logs
 
 ### Test instalation
@@ -24,11 +24,13 @@ or just specific ones
 
 ### Put some data in HDFS
 
-	docker run --rm \
-        --link=hdfs_namenode:hdfs-namenode \
-        --link=hdfs_datanode_1:hdfs-datanode1 \
+    docker run -it \
+        --link=giraphcluster_namenode:giraphcluster-namenode \
+        --link=yarn:yarn \
+        --net=giraphcluster_default \
+        --volume=$(pwd)/sample:/tmp \
         alecspopa/giraph-cluster \
-        hadoop fs -put /usr/local/hadoop/README.txt /README.txt
+        hadoop fs -put /tmp/tiny-graph.txt /tiny-graph.txt
 
 ### Start wordcount example
 
