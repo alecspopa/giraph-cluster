@@ -23,14 +23,14 @@
 	</property>
 	<property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>giraphcluster-namenode:8025</value>
+        <value>giraphcluster-yarn:8025</value>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>giraphcluster-namenode:8030</value>
+        <value>giraphcluster-yarn:8030</value>
     </property>
     <property>
         <name>yarn.resourcemanager.address</name>
-        <value>giraphcluster-namenode:8050</value>
+        <value>giraphcluster-yarn:8050</value>
     </property>
 </configuration>
