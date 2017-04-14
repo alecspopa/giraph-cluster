@@ -11,8 +11,8 @@ elif [[ $1 = "--secondarynamenode" ]]; then
 elif [[ $1 = "--datanode" ]]; then
 	hdfs datanode
 elif [[ $1 = "--yarn" ]]; then
-	$HADOOP_COMMON_HOME/sbin/yarn-daemon.sh start resourcemanager
-	$HADOOP_COMMON_HOME/sbin/mr-jobhistory-daemon.sh start historyserver
+	yarn resourcemanager
+	yarn nodemanager
 	/usr/sbin/sshd -D
 fi
 

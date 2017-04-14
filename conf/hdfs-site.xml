@@ -33,8 +33,14 @@
 		<name>dfs.replication</name>
 		<value>2</value>
 	</property>
-	<property>
-		<name>dfs.block.size</name>
-		<value>134217728</value>
-	</property>
+    <property>
+         <name>dfs.namenode.http-address</name>
+         <value>giraphcluster-namenode:50070</value>
+         <description>Your NameNode hostname for http access.</description>
+    </property>
+    <property>
+         <name>dfs.namenode.secondary.http-address</name>
+         <value>giraphcluster-namenode:50090</value>
+         <description>Your Secondary NameNode hostname for http access.</description>
+    </property>
 </configuration>

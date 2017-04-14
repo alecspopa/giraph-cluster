@@ -56,11 +56,6 @@ RUN apt-get update && \
     mv hadoop-$HADOOP_VERSION $HADOOP_HOME && \
     mkdir -p $HADOOP_HOME/logs
 
-# Overwrite default HADOOP configuration files with our config files
-COPY conf           $HADOOP_HOME/etc/hadoop/
-RUN chown root:root $HADOOP_HOME/etc/hadoop/* && \
-    chmod 700 $HADOOP_HOME/etc/hadoop/*
-
 # Giraph
 ENV GIRAPH_VERSION	1.1.0
 ENV GIRAPH_HADOOP   2.5.1
@@ -72,6 +67,11 @@ RUN wget --quiet http://archive.apache.org/dist/giraph/giraph-$GIRAPH_VERSION/gi
     mv giraph-$GIRAPH_VERSION-hadoop2-for-hadoop-$GIRAPH_HADOOP $GIRAPH_HOME && \
     mkdir -p $GIRAPH_HOME/logs
 
+# Overwrite default HADOOP configuration files
+COPY conf           $HADOOP_HOME/etc/hadoop/
+RUN chown root:root $HADOOP_HOME/etc/hadoop/* && \
+    chmod 700 $HADOOP_HOME/etc/hadoop/*
+
 # Formatting HDFS
 RUN mkdir -p /hadoop_work/hdfs/namenode /hadoop_work/hdfs/secondarynamenode /hadoop_work/hdfs/datanode && \
 	mkdir -p /hadoop_work/yarn/local /hadoop_work/yarn/log && \
@@ -80,7 +80,7 @@ VOLUME /hadoop_work
 
 # Cleanup APT
 RUN apt-get remove -y software-properties-common && \
-	apt autoremove && \
+	apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working dir to Hadoop home
@@ -91,11 +91,14 @@ EXPOSE 50010 50020 50070 50075 50090
 # Mapred ports
 EXPOSE 10020 19888
 #Yarn ports
-EXPOSE 8030 8031 8032 8033 8040 8042 8088
+EXPOSE 8025 8030 8031 8032 8033 8040 8042 8050 8088
+#SSH port
+EXPOSE 2122
 #Other ports
-EXPOSE 49707 2122
+EXPOSE 49707
 
 ADD bootstrap.sh /etc/bootstrap.sh
+COPY bootstrap.sh /etc/bootstrap.sh
 RUN chown root:root /etc/bootstrap.sh && \
     chmod 700 /etc/bootstrap.sh
 
