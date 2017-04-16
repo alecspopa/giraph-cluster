@@ -92,7 +92,7 @@ Debug Connection
         --digitalocean-region="fra1" \
         --digitalocean-private-networking=true \
         --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
-        --digitalocean-userdata=./digitalocean-namenode-userdata.yml \
+        --digitalocean-userdata=./digitalocean-manager-userdata.yml \
         swarm-manager
 
     docker-machine create -d digitalocean \
@@ -102,7 +102,7 @@ Debug Connection
         --digitalocean-region="fra1" \
         --digitalocean-private-networking=true \
         --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
-        --digitalocean-userdata=./digitalocean-datanode-userdata.yml \
+        --digitalocean-userdata=./digitalocean-worker-userdata.yml \
         swarm-worker-1
 
     docker-machine create -d digitalocean \
@@ -112,23 +112,39 @@ Debug Connection
         --digitalocean-region="fra1" \
         --digitalocean-private-networking=true \
         --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
-        --digitalocean-userdata=./digitalocean-datanode-userdata.yml \
+        --digitalocean-userdata=./digitalocean-worker-userdata.yml \
         swarm-worker-2
 
     docker-machine ls
 
-    docker-machine ssh swarm-manager
+	docker-machine ssh swarm-manager
 
-    root@swarm-manager:~# docker swarm init --advertise-addr [swarm-manager IP]
+	root@swarm-manager:~# docker swarm init --advertise-addr [swarm-manager IP]
 
-    docker-machine ssh swarm-worker-1
+	docker-machine ssh swarm-worker-1
 
-    root@swarm-worker-1:~# docker swarm join \
-        --token [your token here] \
-        [swarm-manager IP]:2377
+	root@swarm-worker-1:~# docker swarm join \
+	    --token [your token here] \
+	    [swarm-manager IP]:2377
 
-    docker-machine ssh swarm-worker-2
+	docker-machine ssh swarm-worker-2
 
-    root@swarm-worker-2:~# docker swarm join \
-        --token [your token here] \
-        [swarm-manager IP]:2377
+	root@swarm-worker-2:~# docker swarm join \
+	    --token [your token here] \
+	    [swarm-manager IP]:2377
+
+*On manager* clone the docker repo and execute containers on each
+
+	docker run -d \
+		--name=giraphcluster-namenode \
+		--hostname=giraphcluster-namenode \
+		-p="8042:8042" \
+		-p="8088:8088" \
+		-p="50070:50070" \
+		alecspopa/giraph-cluster /etc/bootstrap.sh --namenode
+
+	docker run -d \
+		--name=giraphcluster-datanode_1 \
+		--hostname=giraphcluster-datanode_1 \
+		--links=namenode:giraphcluster-namenode
+		alecspopa/giraph-cluster /etc/bootstrap.sh --datanode

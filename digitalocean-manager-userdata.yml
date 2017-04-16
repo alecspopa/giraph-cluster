@@ -8,6 +8,11 @@ runcmd:
   - ufw allow 7946/udp
   - ufw allow 4789/udp
 
+  # Giraph cluster
+  - ufw allow 8042/tcp
+  - ufw allow 8088/tcp
+  - ufw allow 50070/tcp
+
   - ufw reload
   - ufw enable
 
