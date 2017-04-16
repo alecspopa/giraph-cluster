@@ -20,7 +20,7 @@ or get it form the repository
 
 or just specific ones
 
-    docker-compose up -d namenode datanode yarn && \
+    docker-compose up -d namenode datanode && \
         docker-compose logs
 
 ## Test instalation
@@ -29,7 +29,6 @@ Debug Connection
 
 	docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         --volume=$(pwd)/tmp_work_dir:/tmp \
         alecspopa/giraph-cluster \
@@ -41,7 +40,6 @@ Debug Connection
 
     docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         --volume=$(pwd)/tmp_work_dir:/tmp \
         alecspopa/giraph-cluster \
@@ -51,28 +49,25 @@ Debug Connection
 
 	docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         alecspopa/giraph-cluster \
         hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar wordcount /README.txt /README.result
 
-### If `word-cound.result` already exists you need to remove it prior running the map reduce job.
+### If `README.result` already exists you need to remove it prior running the map reduce job.
 
     docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         alecspopa/giraph-cluster \
-        hadoop fs -rm -R -f /word-cound.result
+        hadoop fs -rm -R -f /README.result
 
 ### Check the result
 
 	docker run -it --rm \
         --link=giraphcluster_namenode:giraphcluster-namenode \
-        --link=giraphcluster_yarn:giraphcluster-yarn \
         --net=giraphcluster_default \
         alecspopa/giraph-cluster \
-        hadoop fs -cat /word-cound.result/\*
+        hadoop fs -cat /README.result/\*
 
 ## Build Docker Swarm cluster on Digital Ocean
 

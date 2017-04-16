@@ -4,15 +4,17 @@
 
 $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 
+service ssh start
+
 if [[ $1 = "--namenode" ]]; then
 	hdfs namenode
-elif [[ $1 = "--secondarynamenode" ]]; then
-	hdfs secondarynamenode
+
+	# TODO
+	# !!!Run these by hand for now
+	#    NOTE: to connect to the running container: docker exec -it giraphcluster_namenode /bin/bash
+	# yarn resourcemanager
+	# yarn nodemanager
 elif [[ $1 = "--datanode" ]]; then
 	hdfs datanode
-elif [[ $1 = "--yarn" ]]; then
-	yarn resourcemanager
-	yarn nodemanager
-	/usr/sbin/sshd -D
 fi
 

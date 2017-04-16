@@ -9,17 +9,9 @@ services:
     hostname: giraphcluster-namenode
     command: ["/etc/bootstrap.sh", "--namenode"]
     ports:
+      - "8042:8042"
+      - "8088:8088"
       - "50070:50070"
-
-  secondarynamenode:
-    image: alecspopa/giraph-cluster
-    container_name: giraphcluster_secondarynamenode
-    hostname: giraphcluster-secondarynamenode
-    command: ["/etc/bootstrap.sh", "--secondarynamenode"]
-    ports:
-      - "50090:50090"
-    links:
-      - namenode:giraphcluster-namenode
 
   datanode:
     image: alecspopa/giraph-cluster
@@ -29,15 +21,3 @@ services:
       - "50075"
     links:
       - namenode:giraphcluster-namenode
-
-  yarn:
-    image: alecspopa/giraph-cluster
-    container_name: giraphcluster_yarn
-    hostname: giraphcluster-yarn
-    command: ["/etc/bootstrap.sh", "--yarn"]
-    ports:
-      - "8088:8088"
-      - "8042:8042"
-    links:
-      - namenode:giraphcluster-namenode
-      - datanode
