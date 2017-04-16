@@ -90,11 +90,11 @@ WORKDIR $HADOOP_HOME
 EXPOSE 50010 50020 50070 50075 50090
 # Mapred ports
 EXPOSE 10020 19888
-#Yarn ports
+# Yarn ports
 EXPOSE 8025 8030 8031 8032 8033 8040 8042 8050 8088
-#SSH port
+# SSH port
 EXPOSE 2122
-#Other ports
+# Other ports
 EXPOSE 49707
 
 ADD bootstrap.sh /etc/bootstrap.sh

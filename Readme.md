@@ -88,31 +88,47 @@ Debug Connection
     docker-machine create -d digitalocean \
         --digitalocean-access-token="$DIGITALOCEAN_ACCESS_TOKEN" \
         --digitalocean-image="ubuntu-16-04-x64" \
-        --digitalocean-size="1gb" \
+        --digitalocean-size="2gb" \
         --digitalocean-region="fra1" \
         --digitalocean-private-networking=true \
         --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
         --digitalocean-userdata=./digitalocean-namenode-userdata.yml \
-        namenode
+        swarm-manager
 
     docker-machine create -d digitalocean \
         --digitalocean-access-token="$DIGITALOCEAN_ACCESS_TOKEN" \
         --digitalocean-image="ubuntu-16-04-x64" \
-        --digitalocean-size="1gb" \
+        --digitalocean-size="2gb" \
         --digitalocean-region="fra1" \
         --digitalocean-private-networking=true \
         --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
         --digitalocean-userdata=./digitalocean-datanode-userdata.yml \
-        datanode-1
+        swarm-worker-1
+
+    docker-machine create -d digitalocean \
+        --digitalocean-access-token="$DIGITALOCEAN_ACCESS_TOKEN" \
+        --digitalocean-image="ubuntu-16-04-x64" \
+        --digitalocean-size="2gb" \
+        --digitalocean-region="fra1" \
+        --digitalocean-private-networking=true \
+        --digitalocean-ssh-key-fingerprint="20:e3:41:d8:bb:ce:5f:0b:43:99:3e:a9:1e:41:8b:f2" \
+        --digitalocean-userdata=./digitalocean-datanode-userdata.yml \
+        swarm-worker-2
 
     docker-machine ls
 
-    docker-machine ssh namenode
+    docker-machine ssh swarm-manager
 
-    root@namenode:~# docker swarm init --advertise-addr $MANAGER_NODE_IP_ADDRESS
+    root@swarm-manager:~# docker swarm init --advertise-addr [swarm-manager IP]
 
-    docker-machine ssh datanode-1
+    docker-machine ssh swarm-worker-1
 
-    root@datanode-1:~# docker swarm join \
+    root@swarm-worker-1:~# docker swarm join \
         --token [your token here] \
-        $MANAGER_NODE_IP_ADDRESS:2377
+        [swarm-manager IP]:2377
+
+    docker-machine ssh swarm-worker-2
+
+    root@swarm-worker-2:~# docker swarm join \
+        --token [your token here] \
+        [swarm-manager IP]:2377

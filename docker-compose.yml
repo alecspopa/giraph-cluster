@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
 
@@ -21,3 +21,5 @@ services:
       - "50075"
     links:
       - namenode:giraphcluster-namenode
+    deploy:
+      replicas: 2
