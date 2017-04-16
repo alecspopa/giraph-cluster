@@ -23,6 +23,18 @@ or just specific ones
     docker-compose up -d namenode datanode && \
         docker-compose logs
 
+Start 2 datanodes
+
+	docker-compose scale datanode=2
+
+Start resourcemanager and nodemanager in namenode
+	you'll need two console windows opened for this
+TODO: this should start with the namenode
+
+	docker exec -it giraphcluster_namenode /bin/bash
+	yarn resourcemanager
+	yarn nodemanager
+
 ## Test instalation
 
 Debug Connection

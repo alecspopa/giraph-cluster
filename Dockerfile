@@ -26,11 +26,11 @@ RUN chmod 600 /root/.ssh/config && chown root:root /root/.ssh/config
 RUN mkdir -p /var/run/sshd && \
 	chmod 0755 /var/run/sshd
 
-# JAVA
-ENV JAVA_HOME		/usr/lib/jvm/java-7-openjdk-amd64
+# JAVA 8
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-7-jdk && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y default-jdk && \
     rm -rf /var/lib/apt/lists/*
 
 # HADOOP
@@ -67,8 +67,13 @@ RUN wget --quiet http://archive.apache.org/dist/giraph/giraph-$GIRAPH_VERSION/gi
     mv giraph-$GIRAPH_VERSION-hadoop2-for-hadoop-$GIRAPH_HADOOP $GIRAPH_HOME && \
     mkdir -p $GIRAPH_HOME/logs
 
+# Cleanup APT
+RUN apt-get remove -y software-properties-common && \
+	apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
 # Overwrite default HADOOP configuration files
-COPY conf           $HADOOP_HOME/etc/hadoop/
+COPY conf-hadoop $HADOOP_HOME/etc/hadoop/
 RUN chown root:root $HADOOP_HOME/etc/hadoop/* && \
     chmod 700 $HADOOP_HOME/etc/hadoop/*
 
@@ -77,11 +82,6 @@ RUN mkdir -p /hadoop_work/hdfs/namenode /hadoop_work/hdfs/secondarynamenode /had
 	mkdir -p /hadoop_work/yarn/local /hadoop_work/yarn/log && \
     hdfs namenode -format
 VOLUME /hadoop_work
-
-# Cleanup APT
-RUN apt-get remove -y software-properties-common && \
-	apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
 
 # Set working dir to Hadoop home
 WORKDIR $HADOOP_HOME
