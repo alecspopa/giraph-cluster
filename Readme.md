@@ -133,18 +133,24 @@ Debug Connection
 	    --token [your token here] \
 	    [swarm-manager IP]:2377
 
-*On manager* clone the docker repo and execute containers on each
+*On manager* clone the docker repo
 
-	docker run -d \
-		--name=giraphcluster-namenode \
-		--hostname=giraphcluster-namenode \
-		-p="8042:8042" \
-		-p="8088:8088" \
-		-p="50070:50070" \
+	cd giraph-cluster
+
+	docker network create -d overlay giraphcluster_net
+
+	docker service create \
+		--name giraphcluster_namenode \
+		--hostname giraphcluster-namenode \
+		--replicas 1 \
+		-p 8042:8042 \
+		-p 8088:8088 \
+		-p 50070:50070 \
+		--network giraphcluster_net \
 		alecspopa/giraph-cluster /etc/bootstrap.sh --namenode
 
-	docker run -d \
-		--name=giraphcluster-datanode_1 \
-		--hostname=giraphcluster-datanode_1 \
-		--links=namenode:giraphcluster-namenode
-		alecspopa/giraph-cluster /etc/bootstrap.sh --datanode
+NOTE: connet to namenode and start `yarn resourcemanager` and `yarn nodemanager`
+
+	docker ps -a
+
+	docker exec -it 55fda31dfe2e /bin/bash
