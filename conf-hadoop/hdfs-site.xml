@@ -43,4 +43,8 @@
          <value>giraphcluster-namenode:50090</value>
          <description>Your Secondary NameNode hostname for http access.</description>
     </property>
+    <property>
+		<name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+		<value>false</value>
+	</property>
 </configuration>

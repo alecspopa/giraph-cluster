@@ -80,3 +80,21 @@ Debug Connection
         --net=giraphcluster_default \
         alecspopa/giraph-cluster \
         hadoop fs -cat /README.result/\*
+
+## Run this cluster on Kubernetes
+
+	cd kubernetes
+
+	kubectl create -f namenode-pod.yml
+	kubectl create -f namenode-service.yml
+
+	kubectl create -f datanode-controller.yml
+	kubectl create -f datanode-service.yml
+
+Debuging the container:
+
+	gcloud compute instances list
+	gcloud compute ssh <instance_name>
+	sudo docker ps -a
+	sudo docker exec -it <container_id> bash
+

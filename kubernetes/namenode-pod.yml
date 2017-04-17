@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: giraphcluster-namenode
+  labels:
+    name: giraphcluster-namenode
+spec:
+  hostname: giraphcluster-namenode
+  containers:
+    - resources:
+      name: giraphcluster-namenode
+      image: alecspopa/giraph-cluster:latest
+      command: ["/etc/bootstrap.sh"]
+      args: ["--namenode"]
+      ports:
+        - containerPort: 8042
+          name: yarn-port-42
+        - containerPort: 8088
+          name: yarn-port-88
+        - containerPort: 50070
+          name: hdfs-port-50070

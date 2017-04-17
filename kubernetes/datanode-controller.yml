@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: giraphcluster-datanode
+spec:
+  replicas: 1
+  selector:
+    name: datanode
+  template:
+    metadata:
+      labels:
+        name: datanode
+    spec:
+      containers:
+        - resources:
+          name: giraphcluster-datanode
+          image: alecspopa/giraph-cluster:latest
+          command: ["/etc/bootstrap.sh"]
+          args: ["--datanode"]
