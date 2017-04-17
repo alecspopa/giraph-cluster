@@ -89,7 +89,6 @@ Debug Connection
 	kubectl create -f namenode-service.yml
 
 	kubectl create -f datanode-controller.yml
-	kubectl create -f datanode-service.yml
 
 Debuging the container:
 

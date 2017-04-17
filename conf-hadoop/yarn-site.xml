@@ -33,9 +33,18 @@
         <name>yarn.resourcemanager.address</name>
         <value>giraphcluster-namenode:8050</value>
     </property>
+
 	<property>
-		<name>yarn.nodemanager.vmem-check-enabled</name>
-    	<value>false</value>
-		<description>Whether virtual memory limits will be enforced for containers</description>
+		<name>yarn.nodemanager.resource.memory-mb</name>
+		<value>10240</value>
 	</property>
+	<property>
+		<name>yarn.scheduler.minimum-allocation-mb</name>
+		<value>2048</value>
+	</property>
+
+	<property>
+		<name>yarn.nodemanager.vmem-pmem-ratio</name>
+ 		<value>2.1</value>
+ 	</property>
 </configuration>
