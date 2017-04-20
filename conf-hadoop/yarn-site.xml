@@ -13,15 +13,15 @@
   limitations under the License. See accompanying LICENSE file.
 -->
 <configuration>
-	<property>
-		<name>yarn.nodemanager.aux-services</name>
-		<value>mapreduce_shuffle</value>
-	</property>
-	<property>
-		<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-		<value>org.apache.hadoop.mapred.ShuffleHandler</value>
-	</property>
-	<property>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+    <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
         <value>giraphcluster-namenode:8025</value>
     </property>
@@ -34,17 +34,17 @@
         <value>giraphcluster-namenode:8050</value>
     </property>
 
-	<property>
-		<name>yarn.nodemanager.resource.memory-mb</name>
-		<value>6144</value>
-	</property>
-	<property>
-		<name>yarn.scheduler.minimum-allocation-mb</name>
-		<value>2048</value>
-	</property>
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>6144</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>2048</value>
+    </property>
 
-	<property>
-		<name>yarn.nodemanager.vmem-pmem-ratio</name>
- 		<value>4</value>
- 	</property>
+    <property>
+        <name>yarn.nodemanager.vmem-pmem-ratio</name>
+        <value>4</value>
+    </property>
 </configuration>
